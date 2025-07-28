@@ -1,5 +1,6 @@
 name: 'Slack Notify with Thread'
 description: 'Send Slack messages (with attachments) to a thread using Incoming Webhook'
+
 inputs:
   webhook_url:
     description: 'Slack Incoming Webhook URL'
@@ -20,12 +21,20 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
+    - shell: bash
+      run: |
+        echo "Generating Slack payload..."
         TS=$(date +%s)
+
+        THREAD_TS_LINE=""
+        if [ -n "${{ inputs.thread_ts }}" ]; then
+          THREAD_TS_LINE="\"thread_ts\": \"${{ inputs.thread_ts }}\","
+        fi
+
         cat <<EOF > payload.json
         {
           "channel": "dev-インターン_ハンズオン",
-          ${INPUT_THREAD_TS:+\"thread_ts\": \"${INPUT_THREAD_TS}\",}
+          $THREAD_TS_LINE
           "attachments": [
             {
               "fallback": "ハンズオン Getting Started の通知",
@@ -42,7 +51,7 @@ runs:
           ]
         }
         EOF
+        echo "Posting to Slack..."
         curl -X POST -H 'Content-type: application/json' \
           --data @payload.json \
           "${{ inputs.webhook_url }}"
-      shell: bash
