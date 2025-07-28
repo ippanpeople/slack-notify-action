@@ -8,6 +8,10 @@ inputs:
   thread_ts:
     description: 'Thread TS (optional)'
     required: false
+  pretext:
+    description: 'Pretext text above the main attachment'
+    required: false
+    default: ''
   author_name:
     description: 'Author name'
     required: true
