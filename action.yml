@@ -1,0 +1,48 @@
+name: 'Slack Notify with Thread'
+description: 'Send Slack messages (with attachments) to a thread using Incoming Webhook'
+inputs:
+  webhook_url:
+    description: 'Slack Incoming Webhook URL'
+    required: true
+  thread_ts:
+    description: 'Thread TS (optional)'
+    required: false
+  author_name:
+    description: 'Author name'
+    required: true
+  repository:
+    description: 'Repository link'
+    required: true
+  message:
+    description: 'Message text content'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        TS=$(date +%s)
+        cat <<EOF > payload.json
+        {
+          "channel": "dev-インターン_ハンズオン",
+          ${INPUT_THREAD_TS:+\"thread_ts\": \"${INPUT_THREAD_TS}\",}
+          "attachments": [
+            {
+              "fallback": "ハンズオン Getting Started の通知",
+              "color": "#215EBF",
+              "pretext": "STEP0: Getting Started 完了✅ <!channel>",
+              "author_name": "${{ inputs.author_name }}",
+              "title": "Github Repository",
+              "title_link": "${{ inputs.repository }}",
+              "text": "${{ inputs.message }}",
+              "footer": "インターン_ハンズオン BOT",
+              "footer_icon": "https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F1022001%2F30818b78-45d7-bac7-12b9-8433c2ef3011.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&s=035dfbe9921b278308e895b5e03dab1a",
+              "ts": $TS
+            }
+          ]
+        }
+        EOF
+        curl -X POST -H 'Content-type: application/json' \
+          --data @payload.json \
+          "${{ inputs.webhook_url }}"
+      shell: bash
