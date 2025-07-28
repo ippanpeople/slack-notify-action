@@ -31,17 +31,22 @@ runs:
           THREAD_TS_LINE="\"thread_ts\": \"${{ inputs.thread_ts }}\","
         fi
 
+        PRETEXT_TEXT="${{ inputs.pretext }}"
+        if [ -z "$PRETEXT_TEXT" ]; then
+          PRETEXT_TEXT="通知があります"
+        fi
+
         cat <<EOF > payload.json
         {
           "channel": "dev-インターン_ハンズオン",
           $THREAD_TS_LINE
           "attachments": [
             {
-              "fallback": "ハンズオン Getting Started の通知",
+              "fallback": "ハンズオンの通知",
               "color": "#215EBF",
-              "pretext": "STEP0: Getting Started 完了✅ <!channel>",
+              "pretext": "$PRETEXT_TEXT",
               "author_name": "${{ inputs.author_name }}",
-              "title": "Github Repository",
+              "title": "GitHub Repository",
               "title_link": "${{ inputs.repository }}",
               "text": "${{ inputs.message }}",
               "footer": "インターン_ハンズオン BOT",
