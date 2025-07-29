@@ -40,6 +40,9 @@ runs:
           PRETEXT_TEXT="通知があります"
         fi
 
+        # message 內容 escape 雙引號，避免產生非法 JSON
+        ESCAPED_MESSAGE=$(echo "${{ inputs.message }}" | sed 's/"/\\"/g')
+
         cat <<EOF > payload.json
         {
           "channel": "dev-インターン_ハンズオン",
@@ -52,7 +55,7 @@ runs:
               "author_name": "${{ inputs.author_name }}",
               "title": "GitHub Repository",
               "title_link": "${{ inputs.repository }}",
-              "text": "${{ inputs.message }}",
+              "text": "$ESCAPED_MESSAGE",
               "footer": "インターン_ハンズオン BOT",
               "footer_icon": "https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F1022001%2F30818b78-45d7-bac7-12b9-8433c2ef3011.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&s=035dfbe9921b278308e895b5e03dab1a",
               "ts": $TS
