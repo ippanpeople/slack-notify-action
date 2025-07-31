@@ -63,7 +63,7 @@ runs:
         }
         EOF
         echo "Posting to Slack..."
-        if curl --fail --show-error -X POST -H 'Content-type: application/json' --data @payload.json https://github.com/ippanpeople/sacloud-apprun-action/blob/master/action.yaml; then
+        if curl --fail --show-error -X POST -H 'Content-type: application/json' --data @payload.json "${{ inputs.webhook_url }}"; then
           echo "🚀 Slack 通知成功"
         else
           echo "❌ Slack 通知失敗"
