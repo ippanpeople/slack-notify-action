@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.0.6](https://github.com/ippanpeople/slack-notify-action/compare/v0.0.5...v0.0.6) - 2025-07-31
+
 ## [v0.0.5](https://github.com/ippanpeople/slack-notify-action/compare/v0.0.4...v0.0.5) - 2025-07-29
 
 ## [v0.0.4](https://github.com/ippanpeople/slack-notify-action/compare/v0.0.3...v0.0.4) - 2025-07-28
