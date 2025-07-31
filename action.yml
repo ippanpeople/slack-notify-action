@@ -40,7 +40,6 @@ runs:
           PRETEXT_TEXT="通知があります"
         fi
 
-        # message 內容 escape 雙引號，避免產生非法 JSON
         ESCAPED_MESSAGE=$(echo "${{ inputs.message }}" | sed 's/"/\\"/g')
 
         cat <<EOF > payload.json
@@ -64,6 +63,9 @@ runs:
         }
         EOF
         echo "Posting to Slack..."
-        curl -X POST -H 'Content-type: application/json' \
-          --data @payload.json \
-          "${{ inputs.webhook_url }}"
+        if curl --fail --show-error -X POST -H 'Content-type: application/json' --data @payload.json https://github.com/ippanpeople/sacloud-apprun-action/blob/master/action.yaml; then
+          echo "🚀 Slack 通知成功"
+        else
+          echo "❌ Slack 通知失敗"
+          exit 1
+        fi
